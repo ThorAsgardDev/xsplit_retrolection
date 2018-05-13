@@ -3,6 +3,18 @@ var xjs = require('xjs');
 
 var config = {};
 
+var startTime = 0
+var start = 0
+var end = 0
+var diff = 0
+var timerID = 0
+var timerSource;
+var interval;
+var hour = 00;
+var minutes = 00;
+var secondes = 00;
+var previousTimer;
+
 // For test
 // config.SPREAD_SHEET_ID = "<Your google API key>";
 // config.API_KEY = "<Your spead sheet ID>";
@@ -93,10 +105,36 @@ async function fillGames() {
 	}
 }
 
+async function setTimer() {
+	var timerElt = document.getElementById("chronotimeold");
+	var selectGameConsolesElt = document.getElementById("gameConsoles");
+	var selectGamesElt = document.getElementById("games");
+	
+	var gameId = selectGamesElt.selectedIndex + parseInt(config.FIRST_GAME_LINE);
+	var timerValues = await getValues(selectGameConsolesElt.value, config.TIMER_COLUMN + gameId);
+	if(timerValues === undefined) {
+		timerElt.innerHTML = "00:00:00"	
+	} else {
+		var timerValue = timerValues[0][0];
+		var results = timerValue.split(":");
+		hour = results[0];
+		minutes = results[1];
+		secondes = results[2];
+		previousTimer = hour + ":" + minutes + ":" + secondes;
+		timerElt.innerHTML = previousTimer;
+
+	}
+}
+
 async function setProgression() {
 	
 	var selectGameConsolesElt = document.getElementById("gameConsoles");
 	
+	var progressionValues = await getValues(selectGameConsolesElt.value, config.PROGRESSION_COLUMNS);
+	var progressionElt = document.getElementById("progression");
+	
+	progressionElt.innerHTML = progressionValues[0][0] + "/" + progressionValues[0][2];
+/*
 	var values = await getValues(selectGameConsolesElt.value, config.TIMER_COLUMN + parseInt(config.FIRST_GAME_LINE) + ":" + config.TIMER_COLUMN + "1000");
 	var n = 0;
 
@@ -112,7 +150,7 @@ async function setProgression() {
 	
 	var progressionElt = document.getElementById("progression");
 	
-	progressionElt.innerHTML = n + "/" + selectElt.options.length;
+	progressionElt.innerHTML = n + "/" + selectElt.options.length; */
 }
 
 async function setViewer() {
@@ -234,24 +272,17 @@ function setSourceText(source, value) {
 	});
 }
 
-function startTimer(source, resetTimer) {
-	if(resetTimer) {
-		source.getItemList().then(function(items) {
-			var item = items[0];
-			item.refresh();
-			/*item.getId().then(function(id) {
-				external.SearchVideoItem(id);
-				external.CallInner('TogglePause');
-			});*/
-		});
-	}
+function updateTimer() {
+	var timer = document.getElementById("chronotime");
+	setSourceText(timerSource, timer.innerHTML);
+
 }
 
 function onStartClick() {
 	var progressionElt = document.getElementById("progression");
 	var viewerElt = document.getElementById("viewer");
 	var selectGamesElt = document.getElementById("games");
-	var resetTimerElt = document.getElementById("resetTimer");
+	var timer = document.getElementById("chronotime");
 	
 	xjs.ready().then(function() {
 		xjs.Scene.getActiveScene().then(function(scene) {
@@ -264,8 +295,9 @@ function onStartClick() {
 							setSourceText(source, viewerElt.innerHTML);
 						} else if(name == config.XSPLIT_FIELD_GAME) {
 							setSourceText(source, selectGamesElt.value);
-						} else if(name == config.XSPLIT_FIELD_TIMER) {
-							startTimer(source, resetTimerElt.checked);
+						} else if (name == config.XSPLIT_FIELD_TIMER) {
+							timerSource = source;
+							setTimer();
 						}
 					});
 				});
@@ -280,10 +312,61 @@ async function main() {
 
 async function mainXjs() {
 	xjs.ready().then(function() {
-		xjs.ExtensionWindow.resize(330, 430);
+		xjs.ExtensionWindow.resize(330, 500);
 		main();
 	});
 }
+
+function chrono(){
+	end = new Date()
+	diff = end - start
+	diff = new Date(diff)
+	var sec = diff.getSeconds()
+	var min = diff.getMinutes()
+	var hr = diff.getHours() - 1
+	if (min < 10){
+		min = "0" + min
+	}
+	if (sec < 10){
+		sec = "0" + sec
+	}
+	document.getElementById("chronotime").innerHTML = hr + ":" + min + ":" + sec
+	timerID = setTimeout("chrono()", 10)
+}
+
+function chronoStart(){
+	document.chronoForm.startstop.value = "Stop Timer"
+	document.chronoForm.startstop.onclick = chronoStop
+	document.chronoForm.reset.onclick = chronoReset
+	start = new Date();
+	interval = setInterval(updateTimer, 1000);
+	chrono()
+}
+function chronoContinue(){
+	document.chronoForm.startstop.value = "Stop Timer"
+	document.chronoForm.startstop.onclick = chronoStop
+	document.chronoForm.reset.onclick = chronoReset
+	start = new Date()-diff
+	start = new Date(start)
+	chrono()
+}
+function chronoReset(){
+	document.getElementById("chronotime").innerHTML = "00:00:00"
+	clearInterval();
+	start = new Date()
+}
+function chronoStopReset(){
+	document.getElementById("chronotime").innerHTML = "00:00:00"
+	document.chronoForm.startstop.onclick = chronoStart
+}
+function chronoStop(){
+	document.chronoForm.startstop.value = "Start Timer"
+	document.chronoForm.startstop.onclick = chronoContinue
+	document.chronoForm.reset.onclick = chronoStopReset
+	clearTimeout(timerID)
+}
+
+
 
 window.addEventListener('unhandledrejection', function(e) {
 	alert("Unhandled rejection: " + e.reason);
@@ -293,5 +376,5 @@ window.onerror = function(message, source, lineno, colno, error) {
 	alert("On error: " + message + " " + source + " " + lineno + " " + colno);
 }
 
-// document.addEventListener("DOMContentLoaded", main);
+document.addEventListener("DOMContentLoaded", main);
 document.addEventListener("DOMContentLoaded", mainXjs);

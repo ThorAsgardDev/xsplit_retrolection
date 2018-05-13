@@ -15,8 +15,6 @@
 		<label for="games">Games: </label>
 		<select id="games" style="width: 100%"></select>
 		<br></br>
-		<input id="resetTimer"type="checkbox" checked>Reset & Start timer at start</input>
-		<br></br>
 		<label for="progression">Progression: </label>
 		<label id="progression"></label>
 		<br></br>
@@ -27,5 +25,14 @@
 		<br></br>
 		<button id="startButton" type="button" style="height: 40px; width: 100%">Start</button>
 		<label id="debug"></label>
+		<br></br>
+		Timer :
+  		<span id="chronotime">00:00:00</span>
+		<form name="chronoForm">
+	    	<input type="button" name="startstop" value="Start Timer" onClick="chronoStart()" />
+	    	<input type="button" name="reset" value="Reset Timer" onClick="chronoReset()" /> 
+  		</form>
+  		Temps déjà réalisé :
+  		<span id="chronotimeold">00:00:00</span>
 	</body>
 </html>
