@@ -10,9 +10,9 @@ var diff = 0
 var timerID = 0
 var timerSource;
 var interval;
-var hour = 00;
-var minutes = 00;
-var secondes = 00;
+var hours = 0;
+var minutes = 0;
+var secondes = 0;
 var previousTimer;
 
 // For test
@@ -106,22 +106,26 @@ async function fillGames() {
 }
 
 async function setTimer() {
-	var timerElt = document.getElementById("chronotimeold");
+	var timerElt = document.getElementById("chronotime");
 	var selectGameConsolesElt = document.getElementById("gameConsoles");
 	var selectGamesElt = document.getElementById("games");
 	
 	var gameId = selectGamesElt.selectedIndex + parseInt(config.FIRST_GAME_LINE);
 	var timerValues = await getValues(selectGameConsolesElt.value, config.TIMER_COLUMN + gameId);
 	if(timerValues === undefined) {
-		timerElt.innerHTML = "00:00:00"	
+		previousTimer = "00:00:00";
+		timerElt.innerHTML = previousTimer;	
 	} else {
 		var timerValue = timerValues[0][0];
 		var results = timerValue.split(":");
-		hour = results[0];
+		hours = results[0];
 		minutes = results[1];
 		secondes = results[2];
-		previousTimer = hour + ":" + minutes + ":" + secondes;
+		previousTimer = hours + ":" + minutes + ":" + secondes;
 		timerElt.innerHTML = previousTimer;
+		console.log(hours);
+		console.log(minutes);
+		console.log(secondes);
 
 	}
 }
@@ -321,9 +325,23 @@ function chrono(){
 	end = new Date()
 	diff = end - start
 	diff = new Date(diff)
-	var sec = diff.getSeconds()
-	var min = diff.getMinutes()
-	var hr = diff.getHours() - 1
+	var sec;
+	var min;
+	var hr;
+	if(previousTimer !== undefined && previousTimer !== "00:00:00") {
+		sec = diff.getSeconds() + parseInt(secondes);
+		min = diff.getMinutes() + parseInt(minutes);
+		hr = diff.getHours() + parseInt(hours) - 1;
+	} else {
+		sec = diff.getSeconds();
+		min = diff.getMinutes();
+		hr = diff.getHours() - 1;
+	}
+
+	if (hr < 10){
+		hr = "0" + hr
+	}
+
 	if (min < 10){
 		min = "0" + min
 	}
