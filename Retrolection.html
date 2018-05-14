@@ -12,7 +12,7 @@
 		<label for="gameConsoles">Consoles: </label>
 		<select id="gameConsoles" style="width: 100%"></select>
 		<br></br>
-		<label for="games">Games: </label>
+		<label for="games">Jeux: </label>
 		<select id="games" style="width: 100%"></select>
 		<br></br>
 		<label for="progression">Progression: </label>
@@ -21,16 +21,18 @@
 		<label for="viewer">Viewer: </label>
 		<label id="viewer"></label>
 		<br></br>
-		<button id="refreshButton" type="button" style="height: 40px; width: 100%">Refresh</button>
+		<button id="refreshButton" type="button" style="height: 40px; width: 100%">Remettre à zéro</button>
 		<br></br>
-		<button id="startButton" type="button" style="height: 40px; width: 100%">Start</button>
+		<button id="startButton" type="button" style="height: 40px; width: 100%">Mettre à jour xsplit</button>
 		<label id="debug"></label>
 		<br></br>
 		Timer :
   		<span id="chronotime">00:00:00</span>
+  		<br></br>
 		<form name="chronoForm">
-	    	<input type="button" name="startstop" value="Start Timer" onClick="chronoStart()" />
-	    	<input type="button" name="reset" value="Reset Timer" onClick="chronoReset()" /> 
+	    	<input style="height: 40px; width: 100%" type="button" name="startstop" value="Start Timer" onClick="chronoStart()" />
+	    	<br></br>
+	    	<input style="height: 40px; width: 100%" type="button" name="reset" value="Reset Timer" onClick="chronoReset()" /> 
   		</form>
 	</body>
 </html>

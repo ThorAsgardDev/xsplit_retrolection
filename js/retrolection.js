@@ -316,7 +316,7 @@ async function main() {
 
 async function mainXjs() {
 	xjs.ready().then(function() {
-		xjs.ExtensionWindow.resize(330, 500);
+		xjs.ExtensionWindow.resize(330, 570);
 		main();
 	});
 }
