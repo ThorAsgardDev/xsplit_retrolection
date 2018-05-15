@@ -14,6 +14,7 @@ var hours = 0;
 var minutes = 0;
 var secondes = 0;
 var previousTimer;
+var pathForJaquette;
 
 // For test
 // config.SPREAD_SHEET_ID = "<Your google API key>";
@@ -123,9 +124,6 @@ async function setTimer() {
 		secondes = results[2];
 		previousTimer = hours + ":" + minutes + ":" + secondes;
 		timerElt.innerHTML = previousTimer;
-		console.log(hours);
-		console.log(minutes);
-		console.log(secondes);
 
 	}
 }
@@ -138,23 +136,7 @@ async function setProgression() {
 	var progressionElt = document.getElementById("progression");
 	
 	progressionElt.innerHTML = progressionValues[0][0] + "/" + progressionValues[0][2];
-/*
-	var values = await getValues(selectGameConsolesElt.value, config.TIMER_COLUMN + parseInt(config.FIRST_GAME_LINE) + ":" + config.TIMER_COLUMN + "1000");
-	var n = 0;
 
-	if(values) {
-		values.forEach(function(item) {
-			if(item[0]) {
-				n++;
-			}
-		});
-	}
-	
-	var selectElt = document.getElementById("games");
-	
-	var progressionElt = document.getElementById("progression");
-	
-	progressionElt.innerHTML = n + "/" + selectElt.options.length; */
 }
 
 async function setViewer() {
@@ -232,6 +214,21 @@ function loadConfig(file) {
 	return config;
 }
 
+async function getJaquette() {
+	var selectGameConsolesElt = document.getElementById("gameConsoles");
+	
+	var consoleLowerCaseForPath = selectGameConsolesElt.value.toLowerCase();
+	var path = "c:/live/retrolection/jaquette/" + consoleLowerCaseForPath + "/";
+
+	//TODO : Ajouter un champ texte pour saisir le chemin de la jaquette (voir avec Keydee si chemin générique 
+	// (genre c/dossier/consoles/image.jpg)) pour pouvoir update xsplit avec le chemin. Reprendre le code de test wamp
+	var fichierSelectionne = document.getElementById('input').files[0];
+	
+	pathForJaquette = path + fichierSelectionne.name;
+
+
+}
+
 async function load() {
 	
 	config = loadConfig("config.txt");
@@ -287,7 +284,7 @@ function onStartClick() {
 	var viewerElt = document.getElementById("viewer");
 	var selectGamesElt = document.getElementById("games");
 	var timer = document.getElementById("chronotime");
-	
+
 	xjs.ready().then(function() {
 		xjs.Scene.getActiveScene().then(function(scene) {
 			scene.getSources().then(function(sources) {
@@ -302,6 +299,11 @@ function onStartClick() {
 						} else if (name == config.XSPLIT_FIELD_TIMER) {
 							timerSource = source;
 							setTimer();
+						} else if (name == config.XSPLIT_FIELD_JAQUETTE){
+							getJaquette();
+							if(pathForJaquette !== undefined) {
+								source.setValue(pathForJaquette);
+							}
 						}
 					});
 				});
@@ -316,7 +318,7 @@ async function main() {
 
 async function mainXjs() {
 	xjs.ready().then(function() {
-		xjs.ExtensionWindow.resize(330, 570);
+		xjs.ExtensionWindow.resize(330, 620);
 		main();
 	});
 }
@@ -383,6 +385,7 @@ function chronoStop(){
 	document.chronoForm.reset.onclick = chronoStopReset
 	clearTimeout(timerID)
 }
+
 
 
 
