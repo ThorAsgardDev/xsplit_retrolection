@@ -220,8 +220,6 @@ async function getJaquette() {
 	var consoleLowerCaseForPath = selectGameConsolesElt.value.toLowerCase();
 	var path = "c:/live/retrolection/jaquette/" + consoleLowerCaseForPath + "/";
 
-	//TODO : Ajouter un champ texte pour saisir le chemin de la jaquette (voir avec Keydee si chemin générique 
-	// (genre c/dossier/consoles/image.jpg)) pour pouvoir update xsplit avec le chemin. Reprendre le code de test wamp
 	var fichierSelectionne = document.getElementById('input').files[0];
 	
 	pathForJaquette = path + fichierSelectionne.name;
