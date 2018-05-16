@@ -218,7 +218,60 @@ async function getJaquette() {
 	var selectGameConsolesElt = document.getElementById("gameConsoles");
 	
 	var consoleLowerCaseForPath = selectGameConsolesElt.value.toLowerCase();
-	var path = "c:/live/retrolection/jaquette/" + consoleLowerCaseForPath + "/";
+	var consoleForPath;
+	switch(consoleLowerCaseForPath) {
+		case "nes" :
+		consoleForPath = "Nes";
+		break;
+		case "supernes":
+		consoleForPath = "Super_Nes";
+		break;
+		case "dreamcast":
+		consoleForPath = "Dreamcast";
+		break;
+		case "gameboy":
+		consoleForPath = "Game_Boy";
+		break;
+		case "gameboyadvance":
+		consoleForPath = "Game_Boy_Advance";
+		break;
+		case "gameboycolor":
+		consoleForPath = "Game_Boy_Color";
+		break;
+		case "gamegear":
+		consoleForPath = "Game_Gear";
+		break; 
+		case "gamecube":
+		consoleForPath = "Gamecube";
+		break;
+		case "mastersystem":
+		consoleForPath = "Master_System";
+		break;
+		case "megadrive":
+		consoleForPath = "Megadrive";
+		break;
+		case "nintendo64":
+		consoleForPath = "Nintendo_64";
+		break;
+		case "pc":
+		consoleForPath = "PC";
+		break;
+		case "playstation":
+		consoleForPath = "Playstation";
+		break;
+		case "playstation":
+		consoleForPath = "Playstation_2";
+		break;
+		case "saturn":
+		consoleForPath = "Saturn";
+		break;
+		case "xbox":
+		consoleForPath = "Xbox";
+		break;
+		default :
+		break;
+	}
+	var path = "C:/Live/XSPLIT/RETROLECTION/Jaquettes/" + consoleForPath + "/";
 
 	var fichierSelectionne = document.getElementById('input').files[0];
 	
