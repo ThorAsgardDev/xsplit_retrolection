@@ -21,3 +21,5 @@ Cliquer sur ce bouton pour ouvrir l'extension .
 Configuration Xsplit :
 Pour que l'extension puisse fonctionner il faut créer les champs sur xsplit.
 Le nom des champs est indiqué dans le fichier config.txt
+
+En cas de changement de jeux, cliquez sur le bouton reset timer avant de le lancer pour éviter les erreurs de calcul.

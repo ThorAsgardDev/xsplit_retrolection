@@ -16,19 +16,6 @@ var secondes = 0;
 var previousTimer;
 var pathForJaquette;
 
-// For test
-// config.SPREAD_SHEET_ID = "<Your google API key>";
-// config.API_KEY = "<Your spead sheet ID>";
-// config.FIRST_GAME_CONSOLE_SHEET = 3;
-// config.FIRST_GAME_LINE = 4;
-// config.GAME_NAME_COLUMN = "B";
-// config.VIEWER_COLUMN = "C";
-// config.TIMER_COLUMN = "H";
-// config.XSPLIT_FIELD_PROGRESSION = "Progression";
-// config.XSPLIT_FIELD_VIEWER = "Viewer";
-// config.XSPLIT_FIELD_GAME = "Game";
-// config.XSPLIT_FIELD_TIMER = "Timer";
-
 function debug(msg) {
 	var debugElt = document.getElementById("debug");
 	debugElt.innerHTML = msg;
@@ -361,6 +348,7 @@ function onStartClick() {
 			});
 		});
 	});
+	chronoReset();
 }
 
 async function main() {
@@ -375,16 +363,24 @@ async function mainXjs() {
 }
 
 function chrono(){
-	end = new Date()
-	diff = end - start
-	diff = new Date(diff)
-	var sec;
-	var min;
-	var hr;
+	end = new Date();
+	diff = end - start;
+	diff = new Date(diff);
+	var sec = 0;
+	var min = 0;
+	var hr = 0;
 	if(previousTimer !== undefined && previousTimer !== "00:00:00") {
-		sec = diff.getSeconds() + parseInt(secondes);
-		min = diff.getMinutes() + parseInt(minutes);
+		sec = (diff.getSeconds() + parseInt(secondes));
+		min = (diff.getMinutes() + parseInt(minutes));
 		hr = diff.getHours() + parseInt(hours) - 1;
+		if(sec >= 60) {
+			sec = sec % 60;
+			min++;
+		}
+		if(min >= 60) {
+			min = min % 60;
+			hr++;	
+		}
 	} else {
 		sec = diff.getSeconds();
 		min = diff.getMinutes();
