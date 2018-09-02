@@ -135,30 +135,36 @@ async function setViewer() {
 	
 	var values = await getValues(selectGameConsolesElt.value, config.VIEWER_COLUMN + gameId + ":" + config.VIEWER_COLUMN + gameId);
 	var viewer = "";
-	var viewerDon = "";
 	
 	if(values && values[0] && values[0][0]) {
 		viewer = values[0][0];
 	}
 
+	var viewerElt = document.getElementById("viewer");
+
+	viewerElt.innerHTML = viewer;
+}
+
+async function setViewerDon() {
+	
+	var selectGameConsolesElt = document.getElementById("gameConsoles");
+	var selectGamesElt = document.getElementById("games");
+	
+	var gameId = selectGamesElt.selectedIndex + parseInt(config.FIRST_GAME_LINE);
+	
+	var values = await getValues(selectGameConsolesElt.value, config.VIEWER_COLUMN + gameId + ":" + config.VIEWER_COLUMN + gameId);
+	
+	var viewerDon = "";
+
 	var valuesDon = await getValues(selectGameConsolesElt.value, config.VIEWER_DON_COLUMN + gameId + ":" + config.VIEWER_DON_COLUMN + gameId);
+	
 	if(valuesDon && valuesDon[0] && valuesDon[0][0]) {
 		viewerDon = valuesDon[0][0];
 	}
-	var finalResult = "";
-	if(viewer !== "" && viewerDon === "") {
-		finalResult = viewer;
-	} else if (viewer === "" && viewerDon !== "") {
-		finalResult = viewerDon;
-	} else if (viewer !== "" && viewerDon !== "") {
-		finalResult = viewer;
-		finalResult = finalResult.concat(" et ");
-		finalResult = finalResult.concat(viewerDon);
-	}
 
-	var viewerElt = document.getElementById("viewer");
+	var viewerElt = document.getElementById("viewerDon");
 
-	viewerElt.innerHTML = finalResult;
+	viewerElt.innerHTML = viewerDon;
 }
 
 async function onGameConsolesChange(e) {
@@ -173,6 +179,7 @@ async function onGameConsolesChange(e) {
 	await fillGames();
 	await setProgression();
 	await setViewer();
+	await setViewerDon();
 	
 	selectGamesElt.disabled = false;
 	refreshButtonElt.disabled = false;
@@ -187,6 +194,7 @@ async function onGamesChange(e) {
 	startButtonElt.disabled = true;
 	
 	await setViewer();
+	await setViewerDon();
 	
 	refreshButtonElt.disabled = false;
 	startButtonElt.disabled = false;
@@ -301,6 +309,7 @@ async function load() {
 	await fillGames();
 	await setProgression();
 	await setViewer();
+	await setViewerDon();
 	
 	selectGameConsolesElt.onchange = onGameConsolesChange;
 	selectGamesElt.onchange = onGamesChange;
@@ -336,6 +345,7 @@ function updateTimer() {
 function onStartClick() {
 	var progressionElt = document.getElementById("progression");
 	var viewerElt = document.getElementById("viewer");
+	var viewerDonElt = document.getElementById("viewerDon");
 	var selectGamesElt = document.getElementById("games");
 	var timer = document.getElementById("chronotime");
 
@@ -346,8 +356,10 @@ function onStartClick() {
 					source.getCustomName().then(function(name) {
 						if(name == config.XSPLIT_FIELD_PROGRESSION) {
 							setSourceText(source, progressionElt.innerHTML);
-						} else if(name == config.XSPLIT_FIELD_VIEWER) {
+						} else if(name == config.XSPLIT_FIELD_VIEWER1) {
 							setSourceText(source, viewerElt.innerHTML);
+						} else if(name == config.XSPLIT_FIELD_VIEWER2) {
+							setSourceText(source, viewerDonElt.innerHTML);
 						} else if(name == config.XSPLIT_FIELD_GAME) {
 							setSourceText(source, selectGamesElt.value);
 						} else if (name == config.XSPLIT_FIELD_TIMER) {
