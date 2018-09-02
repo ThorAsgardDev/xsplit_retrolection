@@ -135,14 +135,30 @@ async function setViewer() {
 	
 	var values = await getValues(selectGameConsolesElt.value, config.VIEWER_COLUMN + gameId + ":" + config.VIEWER_COLUMN + gameId);
 	var viewer = "";
+	var viewerDon = "";
 	
 	if(values && values[0] && values[0][0]) {
 		viewer = values[0][0];
 	}
-	
+
+	var valuesDon = await getValues(selectGameConsolesElt.value, config.VIEWER_DON_COLUMN + gameId + ":" + config.VIEWER_DON_COLUMN + gameId);
+	if(valuesDon && valuesDon[0] && valuesDon[0][0]) {
+		viewerDon = valuesDon[0][0];
+	}
+	var finalResult = "";
+	if(viewer !== "" && viewerDon === "") {
+		finalResult = viewer;
+	} else if (viewer === "" && viewerDon !== "") {
+		finalResult = viewerDon;
+	} else if (viewer !== "" && viewerDon !== "") {
+		finalResult = viewer;
+		finalResult = finalResult.concat(" et ");
+		finalResult = finalResult.concat(viewerDon);
+	}
+
 	var viewerElt = document.getElementById("viewer");
-	
-	viewerElt.innerHTML = viewer;
+
+	viewerElt.innerHTML = finalResult;
 }
 
 async function onGameConsolesChange(e) {
